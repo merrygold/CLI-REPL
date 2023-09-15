@@ -1,0 +1,80 @@
+/* client/src/CLI.css */
+
+/* Base CLI styling */
+.cli {
+  background-color: black; /* Set the background color to black */
+  color: white;
+  font-family: 'Courier New', monospace;
+  border: 2px solid rgb(204, 14, 14);
+  border-radius: 5px;
+  overflow: hidden;
+  max-height: 100%;
+  max-width: 80%;
+  margin: 10px auto;
+  padding: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* CLI input container styling */
+.cli-input {
+  display: flex;
+  align-items: baseline; /* Align input and cursor on the same baseline */
+}
+
+/* Input styling */
+.input {
+  border: none;
+  background-color: transparent;
+  color: white;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  outline: none;
+  flex-grow: 1; 
+  cursor: text;
+
+}
+
+/* Output (console) styling */
+.output {
+  max-height: auto;
+  overflow-y: auto;
+  padding: 10px;
+  font-size: 18px;
+}
+
+/* CLI prompt styling */
+.prompt {
+  color: #00ff00; /* Green */
+}
+
+/* CLI response styling */
+.response {
+  color: white;
+}
+
+/* CLI command suggestion styling */
+.suggestion {
+  color: #0077ff; /* Blue */
+}
+
+/* Enhance input field with a cursor */
+.input::before {
+  content: '>';
+  display: inline;
+  animation: blink-caret 0.7s infinite;
+}
+
+/* Define the blinking cursor animation */
+@keyframes blink-caret {
+  from,
+  to {
+    border-right: 2px solid white; /* Display the cursor line */
+  }
+  50% {
+    border-right: none; /* Hide the cursor line */
+  }
+}
+
+
+
+/* Add more styling as needed */

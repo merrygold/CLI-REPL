@@ -1,0 +1,23 @@
+/* client/src/CLI.css */
+
+/* Base CLI REPL styling */
+.cli-repl {
+  border: #00ff00 2px solid;
+  background-color: black; /* Set the background color to black */
+  color: white;
+  font-family: 'Courier New', monospace;
+
+  border-radius: 15px;
+  overflow: hidden;
+  height: 1500px;
+  max-width: 80%;
+  max-height: 100%;
+  margin: 0 auto;
+  padding: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.heading {
+  text-align: center;
+  font-size: 44px;
+}
