@@ -1,4 +1,4 @@
-# CLI REPL (Read-Eval-Print Loop)
+# CLI REPL
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/yourusername/your-cli-repl/blob/main/LICENSE)
 [![GitHub Issues](https://img.shields.io/github/issues/yourusername/your-cli-repl)](https://github.com/yourusername/your-cli-repl/issues)
