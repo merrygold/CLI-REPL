@@ -1,5 +1,41 @@
 import React, { useRef, useState } from 'react';
 import '../components/Cli.css';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+
+
+
+
+
+function ChartComponent({ data, columns }) {
+  return (
+    <LineChart width={600} height={300} data={data}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="date" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      {columns.map((col, index) => (
+        <Line
+          type="monotone"
+          dataKey={col}
+          key={index}
+          name={col}
+          stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`} // Random color
+        />
+      ))}
+    </LineChart>
+  );
+}
+
+
+
+
+
+
+
+
+
+
 
 
 const Cli = () => {
@@ -9,13 +45,17 @@ const Cli = () => {
 
   const [input, setInput] = useState('');
   const [output, setOutput] = useState([]);
+  const [chartData, setChartData] = useState(null); 
 
   const fileInputRef = useRef(null);
 
   const handleCommand = () => {
     const command = input.trim().toLowerCase();
     const parts = command.split(' ');
+
     console.log(parts)
+
+
     switch (parts[0]) {
       case 'help':
         showHelp();
@@ -35,8 +75,21 @@ const Cli = () => {
         }
         break;
       case 'upload':
-        handleUpload();
+        handleUploadCsv();
         break;
+
+      case 'draw':
+        if (parts[0] === 'draw' && parts.length === 3) {
+          const fileName = parts[1];
+          const selectedColumns = parts[2].split(',');
+    
+          // Fetch data and draw chart here
+          fetchDataAndDrawChart(fileName, selectedColumns);
+        }
+
+
+        break;
+
       default:
         setOutput([...output, `Command not found: ${input}`]);
         break;
@@ -70,9 +123,8 @@ const Cli = () => {
     setOutput([...output, ...aboutText]);
   };
 
-  const fetchPrice = async (parts) => {
-    if (parts.length === 2) {
-      const pair = parts[1].toUpperCase();
+  const fetchPrice = async (pair) => {
+    if (pair) {
       try {
         const apiUrl = `https://api.binance.com/api/v3/avgPrice?symbol=${pair}`;
         const response = await fetch(apiUrl);
@@ -98,7 +150,7 @@ const Cli = () => {
     }
   };
 
-  const handleUpload = async (event) => {
+  const handleUploadCsv = async (event) => {
     const file = event ? event.target.files[0] : null;
   
     if (file) {
@@ -154,6 +206,8 @@ const Cli = () => {
         />
       </div>
 
+
+ {/* All the Commands Output Data will be displayed in this div */}
       <div className="output">
         {output.map((line, index) => (
           <div key={index}>{line}</div>
@@ -161,13 +215,15 @@ const Cli = () => {
       </div>
 
 
-      {/* Hidden file input element */}
+      {/* Hidden file input element 
+      This Input is Designed for the CSV Upload File
+      */}
       <input
         type="file"
         accept=".csv" // Accept only CSV files
         ref={fileInputRef} // Set the ref to the file input element
         style={{ display: 'none' }} // Hide the input element
-        onChange={(event) => handleUpload(event)} // Call handleUpload when a file is selected
+        onChange={(event) => handleUploadCsv(event)} // Call handleUploadCsv when a file is selected
       />
 
     </div>

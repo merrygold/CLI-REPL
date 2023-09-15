@@ -46,6 +46,24 @@ app.post('/upload', upload.single('file'), (req: Request, res: Response) => {
   }
 });
 
+// Serve uploaded files
+app.use('/draw-chart/:filename', (req, res, next) => {
+  const { filename } = req.params;
+  const filePath = path.join(__dirname, 'draw-chart', filename);
+
+  // Check if the file exists
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      // File does not exist, return a 404 response
+      return res.status(404).json({ message: 'File not found.' });
+    }
+
+    // Serve the file using express.static
+    express.static(path.join(__dirname, 'draw-chart'))(req, res, next);
+  });
+});
+
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

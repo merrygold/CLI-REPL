@@ -28,7 +28,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
     // Check if a file was uploaded successfully
     if (req.file) {
         const { originalname, mimetype } = req.file;
-        console.log(req.file);
         // Check if the uploaded file has the CSV mimetype
         if (mimetype === 'text/csv') {
             res.status(200).json({ message: `${originalname} has been uploaded successfully.` });
@@ -43,6 +42,20 @@ app.post('/upload', upload.single('file'), (req, res) => {
     else {
         res.status(400).json({ message: 'No file uploaded.' });
     }
+});
+// Serve uploaded files
+app.use('/draw-chart/:filename', (req, res, next) => {
+    const { filename } = req.params;
+    const filePath = path_1.default.join(__dirname, 'draw-chart', filename);
+    // Check if the file exists
+    fs_1.default.access(filePath, fs_1.default.constants.F_OK, (err) => {
+        if (err) {
+            // File does not exist, return a 404 response
+            return res.status(404).json({ message: 'File not found.' });
+        }
+        // Serve the file using express.static
+        express_1.default.static(path_1.default.join(__dirname, 'draw-chart'))(req, res, next);
+    });
 });
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
