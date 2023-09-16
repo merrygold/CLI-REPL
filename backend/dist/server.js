@@ -88,9 +88,11 @@ app.delete('/delete-file/:filename', (req, res) => {
         });
     });
 });
+
 app.get('/', (req, res) => {
     res.send('CLI backend Server is Ready.....');
 });
+
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

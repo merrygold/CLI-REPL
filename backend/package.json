@@ -5,8 +5,19 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/server.js",
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist"
   },
+  
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+],
+
   "author": "",
   "license": "ISC",
   "dependencies": {
