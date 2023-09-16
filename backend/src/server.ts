@@ -101,24 +101,9 @@ app.delete('/delete-file/:filename', (req: Request, res: Response) => {
 });
 
 
-
-
-
-
-
-
-
-
-
-
 app.get('/', (req, res) => {
   res.send('CLI backend Server is Ready.....');
 });
-
-
-
-
-
 
 
 app.listen(port, () => {
