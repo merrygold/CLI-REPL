@@ -1,17 +1,14 @@
-import express, { Request, Response } from 'express';
-import multer, { Multer } from 'multer';
-import path from 'path';
-import fs from 'fs';
-import cors from'cors';
-
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
-
-// Allow requests from your frontend domain (http://localhost:3001 in this case)
-// app.use(cors({ origin: 'http://localhost:3001' }));
-app.use(cors({ origin: '*' }));
+// Allow requests from any origin (you can change this if needed)
+app.use(cors());
 
 // Define the destination and filename for the uploaded files
 const storage = multer.diskStorage({
@@ -24,13 +21,12 @@ const storage = multer.diskStorage({
 });
 
 // Set up Multer with the storage
-const upload: Multer = multer({ storage });
+const upload = multer({ storage });
 
 // Route for handling file uploads with format validation
-app.post('/upload', upload.single('file'), (req: Request, res: Response) => {
+app.post('/upload', upload.single('file'), (req, res) => {
   // Check if a file was uploaded successfully
   if (req.file) {
-    
     const { originalname, mimetype } = req.file;
     // Check if the uploaded file has the CSV mimetype
     if (mimetype === 'text/csv') {
@@ -75,8 +71,7 @@ app.get('/draw-chart/:filename', (req, res) => {
   });
 });
 
-
-app.delete('/delete-file/:filename', (req: Request, res: Response) => {
+app.delete('/delete-file/:filename', (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(__dirname, 'draw-chart', filename);
 
@@ -100,11 +95,9 @@ app.delete('/delete-file/:filename', (req: Request, res: Response) => {
   });
 });
 
-
 app.get('/', (req, res) => {
   res.send('CLI backend Server is Ready.....');
 });
-
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
