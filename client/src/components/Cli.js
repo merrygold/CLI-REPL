@@ -208,7 +208,7 @@ console.log("I AM HERE")
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('http://cli-server-ao3nygr9t-merrygold1.vercel.app/upload', {
+        const response = await fetch('https://cli-server-ao3nygr9t-merrygold1.vercel.app/upload', {
           method: 'POST',
           body: formData,
         });
@@ -242,7 +242,7 @@ console.log("I AM HERE")
   // * Will Get the CSV file from the Backend First Convert the Response to {TEXT} and then to an {ARRAY}
   const fetchDataAndDrawChart = async (fileName) => {
     try {
-      const response = await fetch(`http://cli-server-ao3nygr9t-merrygold1.vercel.app/draw-chart/${fileName}`);
+      const response = await fetch(`https://cli-server-ao3nygr9t-merrygold1.vercel.app/draw-chart/${fileName}`);
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -279,7 +279,7 @@ console.log("I AM HERE")
   const handleDeleteCsv = async(FileName)  => {
 
     try {
-      const response = await fetch(`http://cli-server-ao3nygr9t-merrygold1.vercel.app/delete-file/${FileName}`, {
+      const response = await fetch(`https://cli-server-ao3nygr9t-merrygold1.vercel.app/delete-file/${FileName}`, {
         method: 'DELETE',
       });
   
