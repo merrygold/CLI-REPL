@@ -2,14 +2,12 @@ import React, { useMemo, useRef, useState } from 'react';
 import '../components/Cli.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
+
 import Papa from "papaparse"
-
-
-
 
 // * Chart Component Function contains all the Logic for Chart //
 
-function ChartComponent({ data, columns, keys }) {
+function ChartComponent({ data, columns, keys}) {
   
   const xAxisKey = keys[0]
 
@@ -45,6 +43,7 @@ return (
   </LineChart>
   );
 }
+
 
 const Cli = () => {
 
@@ -83,15 +82,19 @@ const Cli = () => {
 
 
     switch (parts[0]) {
+
       case 'help':
         showHelp();
         break;
+
       case 'clear':
         clearCli();
         break;
+
       case 'about':
         aboutCli();
         break;
+
       case 'fetch-price':
         if (parts.length === 2) {
           const pair = parts[1].toUpperCase();
@@ -100,12 +103,22 @@ const Cli = () => {
           setOutput([...output, `Invalid command format. Use: fetch-price `]);
         }
         break;
+
       case 'upload':
         handleUploadCsv();
         break;
 
-      case 'draw':
+      case 'delete':
+        if (parts.length === 2) {
+          const fileName = parts[1];
+          handleDeleteCsv(fileName);
+        } 
+        else {
+          setOutput([...output, `Invalid command format. Use: delete [filename.csv] `]);
+        }
+        break;
 
+      case 'draw':
         if (parts[0] === 'draw' && parts.length === 3) {
           console.log(parts)
           const fileName = parts[1];
@@ -114,8 +127,9 @@ const Cli = () => {
           // Fetch data and draw chart here
           fetchDataAndDrawChart(fileName, selectedColumns);
         }
-
-
+        else {
+          setOutput([...output, `This File Does Not Exist`]);
+        }
         break;
 
       default:
@@ -143,6 +157,7 @@ const Cli = () => {
   // * To Clear the CLI previous Data //
   const clearCli = () => {
     setOutput([])
+    setChartData()
   }
 
   // * About the CLI //
@@ -188,7 +203,7 @@ const Cli = () => {
     const file = event ? event.target.files[0] : null;
 
     if (file) {
-
+console.log("I AM HERE")
       try {
         const formData = new FormData();
         formData.append('file', file);
@@ -215,7 +230,9 @@ const Cli = () => {
         setOutput([...output, `${error}`]);
 
       }
-    } else {
+    } 
+    
+    else {
       // Programmatically trigger the file input click event
       fileInputRef.current.click();
     }
@@ -258,6 +275,32 @@ const Cli = () => {
   };
 
 
+    // * Will Delete CSV file from the Backend 
+  const handleDeleteCsv = async(FileName)  => {
+
+    try {
+      const response = await fetch(`http://localhost:3000/delete-file/${FileName}`, {
+        method: 'DELETE',
+      });
+  
+      if (response.ok) {
+        // File was deleted successfully
+        setOutput([...output, `File ${FileName} has been deleted.`]);
+       
+      } else if (response.status === 404) {
+        // File not found
+        setOutput([...output, `File ${FileName} not Found.`]);
+      } else {
+        // Handle other errors
+        setOutput([...output, `An error occurred while deleting the file.`]);
+       
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+    }
+
+  }
+
   return (
     <div className="cli">
 
@@ -276,7 +319,11 @@ const Cli = () => {
           }}
         />
       </div>
-
+      {/* Chart Data is Displayed in this function to avoid extra Renders ?  */}
+      
+      {chartData ? (memoizedChartComponent) : (<div></div>)}
+      
+    
       {/* All the Commands Output Data  */}
       <div className="output">
         {output.map((line, index) => (
@@ -292,11 +339,6 @@ const Cli = () => {
         style={{ display: 'none' }}
         onChange={(event) => handleUploadCsv(event)}
       />
-
-   
-      {/* Chart Data is Displayed in this function to avoid extra Renders ?  */}
-      {memoizedChartComponent}
-
 
     </div>
   );

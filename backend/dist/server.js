@@ -68,6 +68,26 @@ app.get('/draw-chart/:filename', (req, res) => {
         });
     });
 });
+app.delete('/delete-file/:filename', (req, res) => {
+    const { filename } = req.params;
+    const filePath = path_1.default.join(__dirname, 'draw-chart', filename);
+    // Check if the file exists
+    fs_1.default.access(filePath, fs_1.default.constants.F_OK, (err) => {
+        if (err) {
+            // File does not exist, return a 404 response
+            return res.status(404).json({ message: 'File not found.' });
+        }
+        // Delete the file
+        fs_1.default.unlink(filePath, (err) => {
+            if (err) {
+                // Handle any error that occurred while deleting the file
+                return res.status(500).json({ message: 'Internal server error.' });
+            }
+            // File deleted successfully
+            res.status(200).json({ message: 'File deleted successfully.' });
+        });
+    });
+});
 app.get('/', (req, res) => {
     res.send('CLI backend Server is Ready.....');
 });

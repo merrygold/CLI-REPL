@@ -5,10 +5,11 @@ import './App.css';
 
 function App() {
   return (
-<div className="cli-repl">
-  <h1 className='heading'>My CLI REPL</h1>
-  <Cli />
-</div>
+    
+    <div className="cli-repl">
+      <h1 className='heading'>My CLI REPL</h1>
+      <Cli />
+    </div>
 
   );
 }
