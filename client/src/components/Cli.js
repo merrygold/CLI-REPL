@@ -1,59 +1,85 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import '../components/Cli.css';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
+import Papa from "papaparse"
 
 
 
 
-function ChartComponent({ data, columns }) {
+// * Chart Component Function contains all the Logic for Chart //
+
+function ChartComponent({ data, columns, keys }) {
+  
+  const xAxisKey = keys[0]
+
+  const filteredKeys = []
+  for (let i =0 ; i < columns; i++) {
+      filteredKeys[i] = keys[i]
+  }
+
   return (
-    <LineChart width={600} height={300} data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="date" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      {columns.map((col, index) => (
-        <Line
-          type="monotone"
-          dataKey={col}
-          key={index}
-          name={col}
-          stroke={`#${Math.floor(Math.random() * 16777215).toString(16)}`} // Random color
-        />
-      ))}
-    </LineChart>
+    <LineChart
+    width={1700}
+    height={500}
+    data={data}
+    margin={{
+      top: 5,
+      right: 30,
+      left: 20,
+      bottom: 5,
+    }}
+  >
+    <CartesianGrid strokeDasharray="2 2" />
+    <XAxis dataKey={xAxisKey} />
+    <YAxis />
+    <Tooltip />
+    <Legend />
+
+    
+{filteredKeys.map((key , index)=>{
+return (
+  <Line type="monotone" key={index} dataKey={key} stroke="#82ca9d"/>
+  )
+})}
+  </LineChart>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
 
 const Cli = () => {
 
   const currentURL = window.location.href;
   // console.log(currentURL);
-
+  console.log("State Changed")
   const [input, setInput] = useState('');
   const [output, setOutput] = useState([]);
+
   const [chartData, setChartData] = useState(null); 
+  const [keys, setKeys] = useState()
+  const [columns, setColumns] = useState()
 
   const fileInputRef = useRef(null);
 
+
+  // * We Used the useMemo Hook to Avoid Extra Chart Renders//
+  const memoizedChartComponent = useMemo(() => {
+    if (chartData) {
+      return (
+        <div className="chart-container">
+          <ChartComponent data={chartData} columns={columns} keys={keys} />
+        </div>
+      );
+    }
+    return null;
+  }, [chartData, columns, keys]);
+
+
+  // * The main function who handles all the CLI inputs and then directs to their respective functions//
   const handleCommand = () => {
     const command = input.trim().toLowerCase();
     const parts = command.split(' ');
 
-    console.log(parts)
+    // console.log(parts)
 
 
     switch (parts[0]) {
@@ -71,7 +97,7 @@ const Cli = () => {
           const pair = parts[1].toUpperCase();
           fetchPrice(pair);
         } else {
-          setOutput(['Invalid command format. Use: fetch-price [pair]']);
+          setOutput([...output, `Invalid command format. Use: fetch-price `]);
         }
         break;
       case 'upload':
@@ -79,10 +105,12 @@ const Cli = () => {
         break;
 
       case 'draw':
+
         if (parts[0] === 'draw' && parts.length === 3) {
+          console.log(parts)
           const fileName = parts[1];
-          const selectedColumns = parts[2].split(',');
-    
+          const selectedColumns = parts[2];
+          setColumns(selectedColumns)
           // Fetch data and draw chart here
           fetchDataAndDrawChart(fileName, selectedColumns);
         }
@@ -99,6 +127,7 @@ const Cli = () => {
   };
 
 
+  // * Help Command Funtion //
   const showHelp = () => {
     const helpText = [
       'Available commands:',
@@ -111,10 +140,12 @@ const Cli = () => {
     setOutput([...output, ...helpText]);
   };
 
+  // * To Clear the CLI previous Data //
   const clearCli = () => {
     setOutput([])
   }
 
+  // * About the CLI //
   const aboutCli = () => {
     const aboutText = [
       'CLI Version 1.0',
@@ -123,6 +154,7 @@ const Cli = () => {
     setOutput([...output, ...aboutText]);
   };
 
+  // * Fetch the Price from the Binnance API just need the Argument of the {Pair} //
   const fetchPrice = async (pair) => {
     if (pair) {
       try {
@@ -146,29 +178,32 @@ const Cli = () => {
         setOutput([...output, 'Internal server error']);
       }
     } else {
-      setOutput(['Invalid command format. Use: fetch-price [pair]']);
+      setOutput(...output, [`Invalid command format. Use: fetch-price ${pair}`]);
     }
   };
 
+  // * Will Post the CSV file to the Backend  //
   const handleUploadCsv = async (event) => {
+
     const file = event ? event.target.files[0] : null;
-  
+
     if (file) {
+
       try {
         const formData = new FormData();
         formData.append('file', file);
-  
+
         const response = await fetch('http://localhost:3000/upload', {
           method: 'POST',
           body: formData,
         });
-  
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-  
+
         const data = await response.json();
-  
+
         if (data.message) {
           // Handle the response from the backend, e.g., show a success message
           setOutput([...output, `${data.message}`]);
@@ -185,12 +220,48 @@ const Cli = () => {
       fileInputRef.current.click();
     }
   };
-  
+
+
+  // * Will Get the CSV file from the Backend First Convert the Response to {TEXT} and then to an {ARRAY}
+  const fetchDataAndDrawChart = async (fileName) => {
+    try {
+      const response = await fetch(`http://localhost:3000/draw-chart/${fileName}`);
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const csvText = await response.text();
+
+      // Split the CSV text into lines
+      const lines = csvText.trim().split('\n');
+
+      // Split the first line (header row) into an array of keys
+      const headerRow = lines[0].replace(/"/g, '').split(',');
+
+      setKeys(headerRow)
+
+      Papa.parse(csvText, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          setChartData(results.data);
+        },
+      });
+      setOutput([...output, 'Chart drawn successfully.']);
+
+    } catch (error) {
+      console.error('Error:', error);
+      setOutput([...output, 'Error: Unable to fetch data or draw chart.']);
+    }
+  };
 
 
   return (
     <div className="cli">
 
+     {/* All the Input Commands ?   */}
       <div className='cli-input'>
         <div>{currentURL}&gt;</div>
         <input
@@ -206,25 +277,26 @@ const Cli = () => {
         />
       </div>
 
-
- {/* All the Commands Output Data will be displayed in this div */}
+      {/* All the Commands Output Data  */}
       <div className="output">
         {output.map((line, index) => (
           <div key={index}>{line}</div>
         ))}
       </div>
-
-
-      {/* Hidden file input element 
-      This Input is Designed for the CSV Upload File
-      */}
+  
+      {/* Hidden file input element This Input is Designed for the CSV Upload File ?  */}
       <input
         type="file"
-        accept=".csv" // Accept only CSV files
-        ref={fileInputRef} // Set the ref to the file input element
-        style={{ display: 'none' }} // Hide the input element
-        onChange={(event) => handleUploadCsv(event)} // Call handleUploadCsv when a file is selected
+        accept=".csv"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={(event) => handleUploadCsv(event)}
       />
+
+   
+      {/* Chart Data is Displayed in this function to avoid extra Renders ?  */}
+      {memoizedChartComponent}
+
 
     </div>
   );

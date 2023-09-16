@@ -10,8 +10,8 @@ const port = 3000;
 
 
 // Allow requests from your frontend domain (http://localhost:3001 in this case)
-app.use(cors({ origin: 'http://localhost:3001' }));
-
+// app.use(cors({ origin: 'http://localhost:3001' }));
+app.use(cors({ origin: '*' }));
 
 // Define the destination and filename for the uploaded files
 const storage = multer.diskStorage({
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, 'draw-chart'));
   },
   filename: function (req, file, cb) {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    cb(null, `${file.originalname}`);
   },
 });
 
@@ -47,7 +47,7 @@ app.post('/upload', upload.single('file'), (req: Request, res: Response) => {
 });
 
 // Serve uploaded files
-app.use('/draw-chart/:filename', (req, res, next) => {
+app.get('/draw-chart/:filename', (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(__dirname, 'draw-chart', filename);
 
@@ -58,10 +58,30 @@ app.use('/draw-chart/:filename', (req, res, next) => {
       return res.status(404).json({ message: 'File not found.' });
     }
 
-    // Serve the file using express.static
-    express.static(path.join(__dirname, 'draw-chart'))(req, res, next);
+    // Read the file content
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        // Handle any error that occurred while reading the file
+        return res.status(500).json({ message: 'Internal server error.' });
+      }
+
+      // Set the response headers to indicate the file type (e.g., CSV)
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+      // Send the file content in the response
+      res.send(data);
+    });
   });
 });
+
+
+
+
+
+
+
+
 
 
 app.listen(port, () => {

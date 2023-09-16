@@ -11,14 +11,15 @@ const cors_1 = __importDefault(require("cors"));
 const app = (0, express_1.default)();
 const port = 3000;
 // Allow requests from your frontend domain (http://localhost:3001 in this case)
-app.use((0, cors_1.default)({ origin: 'http://localhost:3001' }));
+// app.use(cors({ origin: 'http://localhost:3001' }));
+app.use((0, cors_1.default)({ origin: '*' }));
 // Define the destination and filename for the uploaded files
 const storage = multer_1.default.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path_1.default.join(__dirname, 'draw-chart'));
     },
     filename: function (req, file, cb) {
-        cb(null, `${Date.now()}-${file.originalname}`);
+        cb(null, `${file.originalname}`);
     },
 });
 // Set up Multer with the storage
@@ -44,7 +45,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     }
 });
 // Serve uploaded files
-app.use('/draw-chart/:filename', (req, res, next) => {
+app.get('/draw-chart/:filename', (req, res) => {
     const { filename } = req.params;
     const filePath = path_1.default.join(__dirname, 'draw-chart', filename);
     // Check if the file exists
@@ -53,8 +54,18 @@ app.use('/draw-chart/:filename', (req, res, next) => {
             // File does not exist, return a 404 response
             return res.status(404).json({ message: 'File not found.' });
         }
-        // Serve the file using express.static
-        express_1.default.static(path_1.default.join(__dirname, 'draw-chart'))(req, res, next);
+        // Read the file content
+        fs_1.default.readFile(filePath, (err, data) => {
+            if (err) {
+                // Handle any error that occurred while reading the file
+                return res.status(500).json({ message: 'Internal server error.' });
+            }
+            // Set the response headers to indicate the file type (e.g., CSV)
+            res.setHeader('Content-Type', 'text/csv');
+            res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+            // Send the file content in the response
+            res.send(data);
+        });
     });
 });
 app.listen(port, () => {
