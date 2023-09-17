@@ -212,8 +212,7 @@ const Cli = () => {
   
         const response = await fetch('https://cli-server.vercel.app/upload', {
           method: 'POST',
-          body: formData,
-          credentials: 'include',
+          body: formData
         });
   
   
