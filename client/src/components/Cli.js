@@ -210,7 +210,7 @@ const Cli = () => {
         const formData = new FormData();
         formData.append('file', file);
   
-        const response = await fetch('https://cli-server.vercel.app/upload', {
+        const response = await fetch('https://cors-anywhere.herokuapp.com/https://cli-server.vercel.app/upload', {
           method: 'POST',
           body: formData,
         });
