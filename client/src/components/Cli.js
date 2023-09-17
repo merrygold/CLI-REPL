@@ -205,7 +205,7 @@ const Cli = () => {
     const file = event ? event.target.files[0] : null;
   
     if (file) {
-      console.log("I AM HERE");
+      console.log(`I AM HERE`);
       try {
         const formData = new FormData();
         formData.append('file', file);
@@ -221,7 +221,7 @@ const Cli = () => {
         // Check if the response message contains "File Upload"
         if (data.includes('File Upload')) {
           // Handle the success message
-          setOutput([...output, `${file} uploaded successfully`]);
+          setOutput([...output, `${file.name} uploaded successfully`]);
           console.log('Backend Response:', data);
         } else {
           setOutput([...output, 'Invalid response from the backend.']);
@@ -264,7 +264,7 @@ const Cli = () => {
           setChartData(results.data);
         },
       });
-      setOutput([...output, 'Chart drawn successfully.']);
+      setOutput([...output, `Drawing chart based on ${fileName}...\n Chart drawn successfully.`]);
 
     } catch (error) {
       console.error('Error:', error);
