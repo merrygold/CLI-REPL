@@ -202,40 +202,37 @@ const Cli = () => {
 
   // * Will Post the CSV file to the Backend  //
   const handleUploadCsv = async (event) => {
-
     const file = event ? event.target.files[0] : null;
-
+  
     if (file) {
-console.log("I AM HERE")
+      console.log("I AM HERE");
       try {
         const formData = new FormData();
         formData.append('file', file);
-
+  
         const response = await fetch('https://cli-server.vercel.app/upload', {
           method: 'POST',
           body: formData,
         });
-
+  
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
-        const data = await response.json();
-
-        if (data.message) {
-          // Handle the response from the backend, e.g., show a success message
-          setOutput([...output, `${data.message}`]);
-          console.log('Backend Response:', data.message);
+  
+        const data = await response.text(); // Parse the response as text
+  
+        // Check if the response message contains "File Upload"
+        if (data.includes('File Upload')) {
+          // Handle the success message
+          setOutput([...output, `${file} uploaded successfully`]);
+          console.log('Backend Response:', data);
         } else {
-          setOutput([...output, `Invalid response from the backend.`]);
+          setOutput([...output, 'Invalid response from the backend.']);
         }
       } catch (error) {
         setOutput([...output, `${error}`]);
-
       }
-    } 
-    
-    else {
+    } else {
       // Programmatically trigger the file input click event
       fileInputRef.current.click();
     }
