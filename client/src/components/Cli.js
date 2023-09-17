@@ -215,9 +215,6 @@ const Cli = () => {
           body: formData,
         });
   
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
   
         const data = await response.text(); // Parse the response as text
   
