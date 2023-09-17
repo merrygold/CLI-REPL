@@ -284,7 +284,7 @@ const Cli = () => {
         method: 'DELETE',
       });
   
-      if (response.ok) {
+      if (response.status === 200) {
         // File was deleted successfully
         setOutput([...output, `File ${FileName} has been deleted.`]);
        
