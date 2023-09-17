@@ -9,10 +9,13 @@ import Papa from "papaparse"
 
 function ChartComponent({ data, columns, keys}) {
   
+  // * Get First Key for X Axis
   const xAxisKey = keys[0]
 
   const filteredKeys = []
-  for (let i =0 ; i < columns; i++) {
+
+  // * Get Keys specified by User in Columns Argument
+  for (let i = 1 ; i < columns; i++) {
       filteredKeys[i] = keys[i]
   }
 
@@ -125,7 +128,7 @@ const Cli = () => {
           const selectedColumns = parts[2];
           setColumns(selectedColumns)
           // Fetch data and draw chart here
-          fetchDataAndDrawChart(fileName, selectedColumns);
+          fetchDataAndDrawChart(fileName);
         }
         else {
           setOutput([...output, `This File Does Not Exist`]);
@@ -254,6 +257,7 @@ console.log("I AM HERE")
       const lines = csvText.trim().split('\n');
 
       // Split the first line (header row) into an array of keys
+      // INFO: regex used for replacing " with empty string
       const headerRow = lines[0].replace(/"/g, '').split(',');
 
       setKeys(headerRow)
@@ -319,6 +323,8 @@ console.log("I AM HERE")
           }}
         />
       </div>
+
+
       {/* Chart Data is Displayed in this function to avoid extra Renders ?  */}
       
       {chartData ? (memoizedChartComponent) : (<div></div>)}
