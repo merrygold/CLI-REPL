@@ -211,6 +211,8 @@ const Cli = () => {
         formData.append('file', file);
   
         const response = await fetch('https://cli-server.vercel.app/upload', {
+          mode:'cors',
+          credentials: 'include',
           method: 'POST',
           body: formData,
         });
