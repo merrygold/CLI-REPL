@@ -7,56 +7,53 @@ import Papa from "papaparse"
 
 // * Chart Component Function contains all the Logic for Chart //
 
-function ChartComponent({ data, columns, keys}) {
-  
+function ChartComponent({ data, columns, keys }) {
+
   // * Get First Key for X Axis
   const xAxisKey = keys[0]
 
   const filteredKeys = []
 
   // * Get Keys specified by User in Columns Argument
-  for (let i = 1 ; i < columns; i++) {
-      filteredKeys[i] = keys[i]
+  for (let i = 1; i < columns; i++) {
+    filteredKeys[i] = keys[i]
   }
 
   return (
     <LineChart
-    width={1700}
-    height={500}
-    data={data}
-    margin={{
-      top: 5,
-      right: 30,
-      left: 20,
-      bottom: 5,
-    }}
-  >
-    <CartesianGrid strokeDasharray="2 2" />
-    <XAxis dataKey={xAxisKey} />
-    <YAxis />
-    <Tooltip />
-    <Legend />
+      width={1700}
+      height={500}
+      data={data}
+      margin={{
+        top: 5,
+        right: 30,
+        left: 20,
+        bottom: 5,
+      }}
+    >
+      <CartesianGrid strokeDasharray="2 2" />
+      <XAxis dataKey={xAxisKey} />
+      <YAxis />
+      <Tooltip />
+      <Legend />
 
-    
-{filteredKeys.map((key , index)=>{
-return (
-  <Line type="monotone" key={index} dataKey={key} stroke="#82ca9d"/>
-  )
-})}
-  </LineChart>
+
+      {filteredKeys.map((key, index) => {
+        return (
+          <Line type="monotone" key={index} dataKey={key} stroke="#82ca9d" />
+        )
+      })}
+    </LineChart>
   );
 }
-
 
 const Cli = () => {
 
   const currentURL = window.location.href;
-  // console.log(currentURL);
-  console.log("State Changed")
   const [input, setInput] = useState('');
   const [output, setOutput] = useState([]);
 
-  const [chartData, setChartData] = useState(null); 
+  const [chartData, setChartData] = useState(null);
   const [keys, setKeys] = useState()
   const [columns, setColumns] = useState()
 
@@ -81,63 +78,62 @@ const Cli = () => {
     const command = input.trim().toLowerCase();
     const parts = command.split(' ');
 
-    // console.log(parts)
+    try {
+      switch (parts[0]) {
+        case 'help':
+          showHelp();
+          break;
 
+        case 'clear':
+          clearCli();
+          break;
 
-    switch (parts[0]) {
+        case 'about':
+          aboutCli();
+          break;
 
-      case 'help':
-        showHelp();
-        break;
+        case 'fetch-price':
+          if (parts.length === 2) {
+            const pair = parts[1].toUpperCase();
+            fetchPrice(pair);
+          } else {
+            setOutput([...output, 'Invalid command format. Use: fetch-price ']);
+          }
+          break;
 
-      case 'clear':
-        clearCli();
-        break;
+        case 'upload':
+          handleUploadCsv();
+          break;
 
-      case 'about':
-        aboutCli();
-        break;
+        case 'delete':
+          if (parts.length === 2) {
+            const fileName = parts[1];
+            handleDeleteCsv(fileName);
+          } else {
+            setOutput([...output, 'Invalid command format. Use: delete [filename.csv] ']);
+          }
+          break;
 
-      case 'fetch-price':
-        if (parts.length === 2) {
-          const pair = parts[1].toUpperCase();
-          fetchPrice(pair);
-        } else {
-          setOutput([...output, `Invalid command format. Use: fetch-price `]);
-        }
-        break;
+        case 'draw':
+          if (parts[0] === 'draw' && parts.length === 3) {
+            console.log(parts);
+            const fileName = parts[1];
+            const selectedColumns = parts[2];
+            setColumns(selectedColumns);
+            // Fetch data and draw chart here
+            fetchDataAndDrawChart(fileName);
+          } else {
+            setOutput([...output, 'Invalid command format. Use: draw [file] [columns]']);
+          }
+          break;
 
-      case 'upload':
-        handleUploadCsv();
-        break;
-
-      case 'delete':
-        if (parts.length === 2) {
-          const fileName = parts[1];
-          handleDeleteCsv(fileName);
-        } 
-        else {
-          setOutput([...output, `Invalid command format. Use: delete [filename.csv] `]);
-        }
-        break;
-
-      case 'draw':
-        if (parts[0] === 'draw' && parts.length === 3) {
-          console.log(parts)
-          const fileName = parts[1];
-          const selectedColumns = parts[2];
-          setColumns(selectedColumns)
-          // Fetch data and draw chart here
-          fetchDataAndDrawChart(fileName);
-        }
-        else {
-          setOutput([...output, `This File Does Not Exist`]);
-        }
-        break;
-
-      default:
-        setOutput([...output, `Command not found: ${input}`]);
-        break;
+        default:
+          setOutput([...output, `Command not found: ${input}`]);
+          break;
+      }
+    } catch (error) {
+      console.error('An error occurred:', error);
+      setOutput([...output, 'An error occurred. Please try again.']);
     }
 
     setInput('');
@@ -203,25 +199,21 @@ const Cli = () => {
   // * Will Post the CSV file to the Backend  //
   const handleUploadCsv = async (event) => {
     const file = event ? event.target.files[0] : null;
-  
+
     if (file) {
-      console.log(`I AM HERE`);
       try {
         const formData = new FormData();
         formData.append('file', file);
-  
-        const response = await fetch('https://cli-server.vercel.app/upload', {
-          mode:'cors',
-          credentials: 'include',
+
+        const response = await fetch('http://localhost:3000/upload', {
           method: 'POST',
           body: formData,
         });
-  
-  
-        const data = await response.text(); // Parse the response as text
-  
+
+        const data = await response.json(); // Parse the response as text
+
         // Check if the response message contains "File Upload"
-        if (data.includes('File Upload')) {
+        if (response.status === 200) {
           // Handle the success message
           setOutput([...output, `${file.name} uploaded successfully`]);
           console.log('Backend Response:', data);
@@ -241,7 +233,7 @@ const Cli = () => {
   // * Will Get the CSV file from the Backend First Convert the Response to {TEXT} and then to an {ARRAY}
   const fetchDataAndDrawChart = async (fileName) => {
     try {
-      const response = await fetch(`https://cli-server.vercel.app/draw-chart/${fileName}`);
+      const response = await fetch(`http://localhost:3000/draw-chart/${fileName}`);
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -275,25 +267,25 @@ const Cli = () => {
   };
 
 
-    // * Will Delete CSV file from the Backend 
-  const handleDeleteCsv = async(FileName)  => {
+  // * Will Delete CSV file from the Backend 
+  const handleDeleteCsv = async (FileName) => {
 
     try {
-      const response = await fetch(`https://cli-server.vercel.app/delete-file/${FileName}`, {
+      const response = await fetch(`http://localhost:3000/delete-file/${FileName}`, {
         method: 'DELETE',
       });
-  
+
       if (response.status === 200) {
         // File was deleted successfully
         setOutput([...output, `File ${FileName} has been deleted.`]);
-       
+
       } else if (response.status === 404) {
         // File not found
         setOutput([...output, `File ${FileName} not Found.`]);
       } else {
         // Handle other errors
         setOutput([...output, `An error occurred while deleting the file.`]);
-       
+
       }
     } catch (error) {
       console.error('An error occurred:', error);
@@ -304,7 +296,7 @@ const Cli = () => {
   return (
     <div className="cli">
 
-     {/* All the Input Commands ?   */}
+      {/* All the Input Commands ?   */}
       <div className='cli-input'>
         <div>{currentURL}&gt;</div>
         <input
@@ -322,17 +314,17 @@ const Cli = () => {
 
 
       {/* Chart Data is Displayed in this function to avoid extra Renders ?  */}
-      
+
       {chartData ? (memoizedChartComponent) : (<div></div>)}
-      
-    
+
+
       {/* All the Commands Output Data  */}
       <div className="output">
         {output.map((line, index) => (
           <div key={index}>{line}</div>
         ))}
       </div>
-  
+
       {/* Hidden file input element This Input is Designed for the CSV Upload File ?  */}
       <input
         type="file"
