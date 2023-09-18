@@ -6,27 +6,36 @@
 [![GitHub Forks](https://img.shields.io/github/forks/yourusername/your-cli-repl)](https://github.com/yourusername/your-cli-repl/network/members)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
+### Important 
+You Need to Run the Backend Server to use this here is the link of the server [https://github.com/merrygold/CLI-SERVER]
+
 ## Overview
-
-CLI REPL is a command-line interface Read-Eval-Print Loop tool that allows you to interactively execute and test code snippets, perform calculations, and explore data, all within your terminal. It provides a simple and intuitive way for developers, data scientists, and anyone working in a command-line environment to experiment with code and perform quick computations without the need for a full-fledged development environment.
-
-## Features
-
-- **Interactive Coding**: Enter code snippets and see immediate results, perfect for experimenting and testing ideas.
-- **Multi-Language Support**: Supports multiple programming languages, making it versatile for various tasks.
-- **Script Execution**: Execute scripts or commands directly from the terminal with ease.
-- **Data Exploration**: Analyze data, inspect variables, and manipulate datasets interactively.
-- **Customizable**: Configure the REPL environment to suit your needs with customizable settings.
-- **Extensible**: Easily extend functionality with plugins and custom commands.
-- **History and Persistence**: Access your command history and save sessions for later reference.
-- **Cross-Platform**: Works seamlessly on Windows, macOS, and Linux.
-
+CLI REPL (Command Line Interface Read-Eval-Print Loop) is a versatile command-line tool that allows you to perform various tasks including fetching cryptocurrency prices, uploading CSV files, and drawing charts. This README provides an overview of the CLI and its capabilities.
+### Available Commands
+1. [Introduction](#introduction)
+2. [Usage](#usage)
+   - [Available Commands](#available-commands)
+   - [Help](#help)
+   - [About](#about)
+   - [Fetch Price](#fetch-price)
+   - [Upload](#upload)
+   - [Draw](#draw)
+3. [Integration with React App](#integration-with-react-app)
+4. [Screenshots](#screenshots)
 ## Getting Started
+
+
 
 To get started with CLI REPL, follow these simple steps:
 
 1. **Installation**: Clone this repository and install the necessary dependencies.
    ```shell
-   git clone https://github.com/yourusername/your-cli-repl.git
-   cd your-cli-repl
-   # Install dependencies (if any)
+   git clone [https://github.com/merrygold/CLI-REPL.git]
+   cd cli-repl
+   npm i 
+   npm run start
+
+## Some Project ScreenShots
+![image](https://github.com/merrygold/CLI-REPL/assets/66420624/aa3ea180-cdb6-4445-bec2-50366e06549f)
+![image](https://github.com/merrygold/CLI-REPL/assets/66420624/2aa32e2b-d88a-4bad-ad11-4fba2f5b7b04)
+
