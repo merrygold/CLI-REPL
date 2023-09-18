@@ -28,6 +28,28 @@ CLI REPL (Command Line Interface Read-Eval-Print Loop) is a versatile command-li
 4. [Screenshots](#screenshots)
 ## Getting Started
 
+## Usage
+
+### Available Commands
+
+Here is a detailed list of available commands that you can use with My Awesome CLI Tool:
+
+#### Help
+
+Display help information about the tool and its commands. You can run the following command to get help:
+
+```bash
+   help
+
+
+#### About
+
+Display information about the tool version. You can run the following command to get information about the version and description of the tool:
+
+```bash
+   about
+
+
 
 
 To get started with CLI REPL, follow these simple steps:
