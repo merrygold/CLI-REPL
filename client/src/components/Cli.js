@@ -213,7 +213,7 @@ const Cli = () => {
           body: formData,
         });
 
-        const data = await response.json(); // Parse the response as text
+        const data = await response.text(); // Parse the response as text
 
         // Check if the response message contains "File Upload"
         if (response.status === 200) {
