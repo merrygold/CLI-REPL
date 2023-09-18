@@ -45,9 +45,3 @@ To get started with CLI REPL, follow these simple steps:
 ![image](https://github.com/merrygold/CLI-REPL/assets/66420624/2619b1ff-57f3-4089-b4db-b13cc6d73031)
 
 
-
-
-
-![image](https://github.com/merrygold/CLI-REPL/assets/66420624/aa3ea180-cdb6-4445-bec2-50366e06549f)
-![image](https://github.com/merrygold/CLI-REPL/assets/66420624/2aa32e2b-d88a-4bad-ad11-4fba2f5b7b04)
-
