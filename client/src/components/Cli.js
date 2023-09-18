@@ -50,7 +50,7 @@ function ChartComponent({ data, columns, keys }) {
 const Cli = () => {
 
 
-  const backendUrl = "https://cli-cloud-server.vercel.app/"
+  const backendUrl = "https://cli-cloud-server.vercel.app"
 
   const currentURL = window.location.href;
   const [input, setInput] = useState('');
