@@ -6,8 +6,10 @@
 [![GitHub Forks](https://img.shields.io/github/forks/yourusername/your-cli-repl)](https://github.com/yourusername/your-cli-repl/network/members)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-## Overview
+### Important 
+You Need to Run the Backend Server to use this here is the link of the server [https://github.com/merrygold/CLI-SERVER]
 
+## Overview
 CLI REPL (Command Line Interface Read-Eval-Print Loop) is a versatile command-line tool that allows you to perform various tasks including fetching cryptocurrency prices, uploading CSV files, and drawing charts. This README provides an overview of the CLI and its capabilities.
 ### Available Commands
 1. [Introduction](#introduction)
@@ -22,6 +24,8 @@ CLI REPL (Command Line Interface Read-Eval-Print Loop) is a versatile command-li
 4. [Screenshots](#screenshots)
 ## Getting Started
 
+
+
 To get started with CLI REPL, follow these simple steps:
 
 1. **Installation**: Clone this repository and install the necessary dependencies.
@@ -35,5 +39,3 @@ To get started with CLI REPL, follow these simple steps:
 ![image](https://github.com/merrygold/CLI-REPL/assets/66420624/aa3ea180-cdb6-4445-bec2-50366e06549f)
 ![image](https://github.com/merrygold/CLI-REPL/assets/66420624/2aa32e2b-d88a-4bad-ad11-4fba2f5b7b04)
 
-### Important 
-You Need to Run the Backend Server to use this here is the link of the server [https://github.com/merrygold/CLI-SERVER]
