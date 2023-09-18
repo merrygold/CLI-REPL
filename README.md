@@ -24,6 +24,8 @@ CLI REPL (Command Line Interface Read-Eval-Print Loop) is a versatile command-li
    - [Fetch Price](#fetch-price)
    - [Upload](#upload)
    - [Draw](#draw)
+   - [Delete](#delete)
+   - [Clear](#clear)
 3. [Integration with React App](#integration-with-react-app)
 4. [Screenshots](#screenshots)
 ## Getting Started
@@ -38,17 +40,59 @@ Here is a detailed list of available commands that you can use with My Awesome C
 
 Display help information about the tool and its commands. You can run the following command to get help:
 
-```bash
-   help
-
 
 #### About
 
 Display information about the tool version. You can run the following command to get information about the version and description of the tool:
 
-```bash
-   about
+#### Fetch Price
 
+Fetches Price of the coin you mentioned in the command. You can run the following command to find out the current price of any crypto you want:
+
+#### Delete
+
+Will Delete the File which you mentioned in the command from the Cloud-Server/Local-Server. You can run the following command to find out the current price of any crypto you want:
+
+#### Upload
+
+Upload the CSV file to the Cloud-Server/Local-Server. You can run the following command to find out the current price of any crypto you want:
+
+
+#### Draw
+Draw the Csv file into a Chart based on the Columns and filenames given. You can run the following command to find out the current price of any crypto you want:
+
+#### Clear
+
+Clear all the previous Data and Commands. You can run the following command to find out the current price of any crypto you want:
+
+
+# Help
+echo "To get help, run:"
+echo "my-awesome-tool help"
+
+# About
+Display information about the tool version. You can run the following command to get information about the version and description of the tool:
+echo "my-awesome-tool about"
+
+# Fetch Price
+echo "To fetch the price of a coin, run:"
+echo "my-awesome-tool fetch-price <coin-name>"
+
+# Delete
+echo "To delete a file from the Cloud-Server/Local-Server, run:"
+echo "my-awesome-tool delete <file-name>"
+
+# Upload
+echo "To upload a CSV file to the Cloud-Server/Local-Server, run:"
+echo "my-awesome-tool upload <file-path> <destination-path>"
+
+# Draw
+echo "To create a chart from a CSV file, run:"
+echo "my-awesome-tool draw <csv-file> <chart-options>"
+
+# Clear
+echo "To clear the terminal, run:"
+echo "clear"
 
 
 
