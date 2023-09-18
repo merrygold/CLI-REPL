@@ -49,6 +49,9 @@ function ChartComponent({ data, columns, keys }) {
 
 const Cli = () => {
 
+
+  const backendUrl = "https://cli-cloud-server.vercel.app/"
+
   const currentURL = window.location.href;
   const [input, setInput] = useState('');
   const [output, setOutput] = useState([]);
@@ -205,7 +208,7 @@ const Cli = () => {
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch('http://localhost:3000/upload', {
+        const response = await fetch(`${backendUrl}/upload`, {
           method: 'POST',
           body: formData,
         });
@@ -233,7 +236,7 @@ const Cli = () => {
   // * Will Get the CSV file from the Backend First Convert the Response to {TEXT} and then to an {ARRAY}
   const fetchDataAndDrawChart = async (fileName) => {
     try {
-      const response = await fetch(`http://localhost:3000/draw-chart/${fileName}`);
+      const response = await fetch(`${backendUrl}/draw-chart/${fileName}`);
 
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -271,7 +274,7 @@ const Cli = () => {
   const handleDeleteCsv = async (FileName) => {
 
     try {
-      const response = await fetch(`http://localhost:3000/delete-file/${FileName}`, {
+      const response = await fetch(`${backendUrl}/delete-file/${FileName}`, {
         method: 'DELETE',
       });
 
