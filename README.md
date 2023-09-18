@@ -39,60 +39,56 @@ Here is a detailed list of available commands that you can use with My Awesome C
 #### Help
 
 Display help information about the tool and its commands. You can run the following command to get help:
-
+```bash
+help
+```
 
 #### About
 
 Display information about the tool version. You can run the following command to get information about the version and description of the tool:
 
+```bash
+about
+```
+
 #### Fetch Price
 
-Fetches Price of the coin you mentioned in the command. You can run the following command to find out the current price of any crypto you want:
+Fetches Price of the coin [btcusdt] you mentioned in the command. You can run the following command to find out the current price of any crypto you want:
+
+```bash
+fetch-price btcusdt
+```
 
 #### Delete
 
-Will Delete the File which you mentioned in the command from the Cloud-Server/Local-Server. You can run the following command to find out the current price of any crypto you want:
+Will Delete the [FileName] that you mentioned in the command from the Cloud-Server/Local-Server. You can run the following command to find out the current price of any crypto you want:
+
+```bash
+delete filename.csv
+```
 
 #### Upload
 
 Upload the CSV file to the Cloud-Server/Local-Server. You can run the following command to find out the current price of any crypto you want:
 
+```bash
+upload
+```
 
 #### Draw
-Draw the Csv file into a Chart based on the Columns and filenames given. You can run the following command to find out the current price of any crypto you want:
 
+Draw the Csv file into a Chart based on the [Columns] and [Filename] given. You can run the following command to find out the current price of any crypto you want:
+
+```bash
+draw filename.csv 3
+```
 #### Clear
 
 Clear all the previous Data and Commands. You can run the following command to find out the current price of any crypto you want:
+```bash
+clear
+```
 
-
-# Help
-echo "To get help, run:"
-echo "my-awesome-tool help"
-
-# About
-Display information about the tool version. You can run the following command to get information about the version and description of the tool:
-echo "my-awesome-tool about"
-
-# Fetch Price
-echo "To fetch the price of a coin, run:"
-echo "my-awesome-tool fetch-price <coin-name>"
-
-# Delete
-echo "To delete a file from the Cloud-Server/Local-Server, run:"
-echo "my-awesome-tool delete <file-name>"
-
-# Upload
-echo "To upload a CSV file to the Cloud-Server/Local-Server, run:"
-echo "my-awesome-tool upload <file-path> <destination-path>"
-
-# Draw
-echo "To create a chart from a CSV file, run:"
-echo "my-awesome-tool draw <csv-file> <chart-options>"
-
-# Clear
-echo "To clear the terminal, run:"
-echo "clear"
 
 
 
@@ -100,7 +96,7 @@ To get started with CLI REPL, follow these simple steps:
 
 1. **Installation**: Clone this repository and install the necessary dependencies.
    ```shell
-   git clone [https://github.com/merrygold/CLI-REPL.git]
+   git clone https://github.com/merrygold/CLI-REPL.git
    cd cli-repl
    npm i 
    npm run start
