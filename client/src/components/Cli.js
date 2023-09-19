@@ -219,8 +219,12 @@ const Cli = () => {
         if (response.status === 200) {
           // Handle the success message
           setOutput([...output, `${file.name} uploaded successfully`]);
-          console.log('Backend Response:', data);
-        } else {
+        }
+        else if (response.status === 400) {
+          // Handle the error from api of the filetype
+          setOutput([...output, `Invalid file type. Only CSV files are allowed.`]);
+        }
+        else {
           setOutput([...output, 'Invalid response from the backend.']);
         }
       } catch (error) {
